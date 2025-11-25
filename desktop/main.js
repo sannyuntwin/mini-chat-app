@@ -1,23 +1,45 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 900,
-    height: 700,
+  const mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
       contextIsolation: true,
-      nodeIntegration: false
+      preload: path.join(__dirname, 'preload.js') // if you have one
     }
-  })
+  });
 
-  // For development load local frontend file.
-  // When packaging, bundle frontend files and update this path as needed.
-  win.loadFile(path.join(__dirname, '../frontend/index.html'))
+  // Open DevTools to see errors
+  mainWindow.webContents.openDevTools();
 
-  // win.webContents.openDevTools() // uncomment for debugging
+  // Load the frontend
+  if (app.isPackaged) {
+    // Production: load from packaged files
+    mainWindow.loadFile(path.join(__dirname, '../frontend/index.html'));
+  } else {
+    // Development: you can use a local server or file
+    mainWindow.loadFile(path.join(__dirname, '../frontend/index.html'));
+  }
+
+  // Log any loading errors
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.log('Failed to load:', errorCode, errorDescription);
+  });
 }
 
-app.whenReady().then(createWindow)
-app.on('window-all-closed', ()=> { if(process.platform !== 'darwin') app.quit() })
+app.whenReady().then(createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});

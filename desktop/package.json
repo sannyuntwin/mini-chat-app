@@ -1,13 +1,67 @@
 {
   "name": "mini-chat-desktop",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Mini Chat Desktop App - Electron + FastAPI backend",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package-win": "electron-packager . mini-chat --platform=win32 --arch=x64 --out=../dist --overwrite"
+    "dev": "electron .",
+    "build": "electron-builder"
   },
+  "keywords": [
+    "electron",
+    "chat",
+    "websocket",
+    "fastapi",
+    "desktop"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^26.0.0",
-    "electron-packager": "^17.0.0"
+    "concurrently": "^8.2.0",
+    "electron": "^26.2.0",
+    "electron-builder": "^24.13.3",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.minichat.app",
+    "productName": "Mini Chat",
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      {
+        "from":"../frontend",
+        "to": "frontend",
+        "filter": ["**/*"]
+      }
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend",
+        "to": "frontend"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico",
+      "verifyUpdateCodeSignature": false,
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "electronDownload": {
+      "cache": "~/.cache/electron"
+    }
   }
 }

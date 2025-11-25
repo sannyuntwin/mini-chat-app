@@ -1,2 +1,4 @@
-// desktop/preload.js
-// Keep empty for now; safe bridge if needed later.
+// Can be used to expose secure APIs to frontend if needed
+window.addEventListener('DOMContentLoaded', () => {
+  console.log("Electron ready");
+});

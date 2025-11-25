@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  # Database
+  db:
+    image: postgres:15
+    container_name: mini-chat-db
+    environment:
+      POSTGRES_USER: chatuser
+      POSTGRES_PASSWORD: chatpass
+      POSTGRES_DB: mini_chat
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Backend
+  backend:
+    build: ./backend
+    container_name: mini-chat-backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: ["./wait-for-db.sh", "db", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: mini-chat-frontend
+    ports:
+      - "3000:80"  # map Nginx port 80 to localhost:3000
+    depends_on:
+      - backend
+      
+volumes:
+  pgdata:
