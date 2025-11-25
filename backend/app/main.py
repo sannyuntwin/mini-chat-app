@@ -2,8 +2,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Set
 from sqlalchemy.orm import Session
-from database import SessionLocal, init_db
-from models import User, Message
+from app.database import SessionLocal, init_db
+from app.models import User, Message
 
 app = FastAPI(title="Mini Chat Backend")
 
