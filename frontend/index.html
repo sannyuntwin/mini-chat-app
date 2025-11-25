@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Mini Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 20px auto; }
+    #chat { border: 1px solid #ddd; height: 400px; overflow-y: auto; padding: 10px; background:#fafafa; }
+    #input { margin-top: 10px; display:flex; gap:6px; }
+    #msg { flex:1; padding:8px; }
+  </style>
+</head>
+<body>
+  <h2>Mini Chat</h2>
+  <div>
+    <label>Nickname: <input id="name" placeholder="your name" /></label>
+  </div>
+  <div id="chat"></div>
+  <div id="input">
+    <input id="msg" placeholder="Type message..." />
+    <button id="send">Send</button>
+  </div>
+
+<script>
+const chatEl = document.getElementById('chat')
+const nameEl = document.getElementById('name')
+const msgEl = document.getElementById('msg')
+const sendBtn = document.getElementById('send')
+
+// default WS host
+const WS_HOST = (location.protocol === 'https:' ? 'wss://' : 'ws://') + (location.hostname || '127.0.0.1') + ':8000/ws';
+let ws = new WebSocket(WS_HOST);
+
+ws.onopen = () => addSystem('Connected to server.')
+ws.onclose = () => addSystem('Disconnected from server.')
+ws.onerror = () => addSystem('WebSocket error.')
+ws.onmessage = (evt) => addMessage(evt.data)
+
+function addSystem(txt){
+  const p = document.createElement('p'); p.style.color='#888'; p.textContent = txt; chatEl.appendChild(p); chatEl.scrollTop = chatEl.scrollHeight;
+}
+function addMessage(txt){
+  const p = document.createElement('p'); p.innerHTML = txt; chatEl.appendChild(p); chatEl.scrollTop = chatEl.scrollHeight;
+}
+function send(){
+  const name = nameEl.value.trim() || 'anon'
+  const text = msgEl.value.trim()
+  if(!text) return
+  const payload = `${new Date().toLocaleTimeString()} <b>${escapeHtml(name)}</b>: ${escapeHtml(text)}`
+  ws.send(payload)
+  msgEl.value = ''
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c])
+}
+sendBtn.onclick = send
+msgEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') send() })
+</script>
+</body>
+</html>
