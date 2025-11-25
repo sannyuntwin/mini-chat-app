@@ -1,0 +1,450 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Chat</title>
+
+<!-- Style -->
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  max-height: 700px;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+  opacity: 0.95;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.disconnected {
+  background: #ef4444;
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.username-section {
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.username-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.username-input-wrapper label {
+  font-weight: 600;
+  color: #495057;
+  min-width: 80px;
+}
+
+#name {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+#name:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#chat {
+  flex: 1;
+  padding: 20px 30px;
+  overflow-y: auto;
+  background: #ffffff;
+  scroll-behavior: smooth;
+}
+
+#chat::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#chat::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+#chat::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+.message {
+  margin-bottom: 16px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-username {
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 4px;
+  font-size: 0.9em;
+}
+
+.message-text {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #2d3748;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.system-message {
+  text-align: center;
+  color: #a0aec0;
+  font-size: 0.85em;
+  margin: 12px 0;
+  font-style: italic;
+}
+
+.input-section {
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+#input {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+#msg {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+#msg:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#send {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+#send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+#send:active {
+  transform: translateY(0);
+}
+
+#send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.empty-state {
+  text-align: center;
+  color: #a0aec0;
+  padding: 60px 20px;
+}
+
+.empty-state-icon {
+  font-size: 3em;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .header {
+    padding: 16px 20px;
+  }
+
+  .header h2 {
+    font-size: 1.2em;
+  }
+
+  .username-section, .input-section {
+    padding: 16px 20px;
+  }
+
+  #chat {
+    padding: 16px 20px;
+  }
+
+  #send {
+    padding: 14px 20px;
+  }
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h2>💬 Mini Chat</h2>
+    <div class="status">
+      <span class="status-dot disconnected" id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+  </div>
+
+  <!-- username-section -->
+  <div class="username-section">
+    <div class="username-input-wrapper">
+      <label for="name">Username:</label>
+      <input id="name" placeholder="Enter your name" maxlength="20"/>
+    </div>
+  </div>
+
+  <!-- chatbox -->
+  <div id="chat">
+    <div class="empty-state">
+      <div class="empty-state-icon">💬</div>
+      <div class="empty-state-text">No messages yet. Start the conversation!</div>
+    </div>
+  </div>
+
+  <!-- message input box -->
+  <div class="input-section">
+    <div id="input">
+      <input id="msg" placeholder="Type your message..." maxlength="500"/>
+      <button id="send" disabled>Send</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- script - function -->
+<script>
+const chatEl = document.getElementById('chat')
+const nameEl = document.getElementById('name')
+const msgEl = document.getElementById('msg')
+const sendBtn = document.getElementById('send')
+const statusDot = document.getElementById('statusDot')
+const statusText = document.getElementById('statusText')
+const WS_HOST = "ws://localhost:8000/ws"
+let ws = null
+let isFirstMessage = true
+
+function connect() {
+  ws = new WebSocket(WS_HOST)
+  
+  ws.onopen = () => {
+    statusDot.classList.remove('disconnected')
+    statusText.textContent = 'Connected'
+    sendBtn.disabled = false
+    addSystem("Connected to chat server")
+  }
+  
+  ws.onmessage = e => {
+    if (isFirstMessage) {
+      chatEl.innerHTML = ''
+      isFirstMessage = false
+    }
+    addMessage(e.data)
+  }
+  
+  ws.onclose = () => {
+    statusDot.classList.add('disconnected')
+    statusText.textContent = 'Disconnected'
+    sendBtn.disabled = true
+    addSystem("Disconnected from server. Attempting to reconnect...")
+    setTimeout(connect, 3000)
+  }
+  
+  ws.onerror = () => {
+    addSystem("Connection error. Retrying...")
+  }
+}
+
+connect()
+
+sendBtn.onclick = send
+msgEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault()
+    send()
+  }
+})
+
+function send() {
+  const name = nameEl.value.trim() || 'Anonymous'
+  const msg = msgEl.value.trim()
+  
+  if (!msg || ws.readyState !== WebSocket.OPEN) return
+  
+  ws.send(`${name}|${msg}`)
+  msgEl.value = ''
+  msgEl.focus()
+}
+
+function addMessage(txt) {
+  if (isFirstMessage) {
+    chatEl.innerHTML = ''
+    isFirstMessage = false
+  }
+  
+  const parts = txt.split('|')
+  if (parts.length >= 2) {
+    const username = parts[0]
+    const message = parts.slice(1).join('|')
+    
+    const messageDiv = document.createElement('div')
+    messageDiv.className = 'message'
+    
+    const usernameDiv = document.createElement('div')
+    usernameDiv.className = 'message-username'
+    usernameDiv.textContent = username
+    
+    const textDiv = document.createElement('div')
+    textDiv.className = 'message-text'
+    textDiv.textContent = message
+    
+    messageDiv.appendChild(usernameDiv)
+    messageDiv.appendChild(textDiv)
+    chatEl.appendChild(messageDiv)
+  } else {
+    const messageDiv = document.createElement('div')
+    messageDiv.className = 'message'
+    const textDiv = document.createElement('div')
+    textDiv.className = 'message-text'
+    textDiv.textContent = txt
+    messageDiv.appendChild(textDiv)
+    chatEl.appendChild(messageDiv)
+  }
+  
+  chatEl.scrollTop = chatEl.scrollHeight
+}
+
+function addSystem(txt) {
+  if (isFirstMessage) {
+    chatEl.innerHTML = ''
+    isFirstMessage = false
+  }
+  
+  const p = document.createElement('div')
+  p.className = 'system-message'
+  p.textContent = txt
+  chatEl.appendChild(p)
+  chatEl.scrollTop = chatEl.scrollHeight
+}
+
+// Save username to localStorage
+nameEl.addEventListener('input', () => {
+  localStorage.setItem('chatUsername', nameEl.value)
+})
+
+// Load saved username
+const savedUsername = localStorage.getItem('chatUsername')
+if (savedUsername) {
+  nameEl.value = savedUsername
+}
+</script>
+
+</body>
+</html>

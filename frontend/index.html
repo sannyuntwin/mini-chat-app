@@ -1,450 +1,386 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Chat - Download Desktop App</title>
 
-<!-- Style -->
+    <!-- Style css -->
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-.container {
-  width: 100%;
-  max-width: 800px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 90vh;
-  max-height: 700px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 20px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
 
-.header h2 {
-  font-size: 1.5em;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
 
-.status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85em;
-  opacity: 0.95;
-}
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4ade80;
-  animation: pulse 2s infinite;
-}
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-.status-dot.disconnected {
-  background: #ef4444;
-  animation: none;
-}
+        .download-section {
+            margin: 40px 0;
+        }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
+        .download-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
 
-.username-section {
-  padding: 20px 30px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-}
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
 
-.username-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+        .download-btn.windows {
+            background: #0078d4;
+            color: white;
+        }
 
-.username-input-wrapper label {
-  font-weight: 600;
-  color: #495057;
-  min-width: 80px;
-}
+        .download-btn.windows:hover {
+            background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
 
-#name {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #e9ecef;
-  border-radius: 10px;
-  font-size: 1em;
-  transition: all 0.3s ease;
-  background: white;
-}
+        .download-btn.mac {
+            background: #000;
+            color: white;
+        }
 
-#name:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
+        .download-btn.mac:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
 
-#chat {
-  flex: 1;
-  padding: 20px 30px;
-  overflow-y: auto;
-  background: #ffffff;
-  scroll-behavior: smooth;
-}
+        .download-btn.linux {
+            background: #FCC624;
+            color: #333;
+        }
 
-#chat::-webkit-scrollbar {
-  width: 8px;
-}
+        .download-btn.linux:hover {
+            background: #e0ad00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
 
-#chat::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
+        .version-info {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
 
-#chat::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 10px;
-}
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
 
-#chat::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
-}
+        .feature {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
 
-.message {
-  margin-bottom: 16px;
-  animation: slideIn 0.3s ease;
-}
+        .feature:hover {
+            transform: translateY(-5px);
+        }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
 
-.message-username {
-  font-weight: 600;
-  color: #667eea;
-  margin-bottom: 4px;
-  font-size: 0.9em;
-}
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
 
-.message-text {
-  background: #f8f9fa;
-  padding: 12px 16px;
-  border-radius: 12px;
-  color: #2d3748;
-  line-height: 1.5;
-  word-wrap: break-word;
-}
+        .feature p {
+            color: #666;
+            line-height: 1.6;
+        }
 
-.system-message {
-  text-align: center;
-  color: #a0aec0;
-  font-size: 0.85em;
-  margin: 12px 0;
-  font-style: italic;
-}
+        .system-requirements {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
 
-.input-section {
-  padding: 20px 30px;
-  background: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-}
+        .system-requirements h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
 
-#input {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-#msg {
-  flex: 1;
-  padding: 14px 18px;
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
-  font-size: 1em;
-  transition: all 0.3s ease;
-  background: white;
-}
+        .req-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
 
-#msg:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
+        .req-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
 
-#send {
-  padding: 14px 28px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
+        .req-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
 
-#send:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
-}
+        .req-item li {
+            padding: 5px 0;
+            color: #666;
+        }
 
-#send:active {
-  transform: translateY(0);
-}
+        .req-item li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
 
-#send:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            opacity: 0.9;
+        }
 
-.empty-state {
-  text-align: center;
-  color: #a0aec0;
-  padding: 60px 20px;
-}
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 30px 0;
+        }
 
-.empty-state-icon {
-  font-size: 3em;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
 
-.empty-state-text {
-  font-size: 1.1em;
-}
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
 
-@media (max-width: 768px) {
-  .container {
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-  }
-
-  .header {
-    padding: 16px 20px;
-  }
-
-  .header h2 {
-    font-size: 1.2em;
-  }
-
-  .username-section, .input-section {
-    padding: 16px 20px;
-  }
-
-  #chat {
-    padding: 16px 20px;
-  }
-
-  #send {
-    padding: 14px 20px;
-  }
-}
+            .download-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
 </style>
 
 </head>
 <body>
-<div class="container">
+    <div class="container">
+        <!-- header  -->
+        <header>
+            <h1>💬 Handsome Chat</h1>
+            <p>Fast, secure, and lightweight desktop chat application</p>
+        </header>
 
-  <!-- Header -->
-  <div class="header">
-    <h2>💬 Mini Chat</h2>
-    <div class="status">
-      <span class="status-dot disconnected" id="statusDot"></span>
-      <span id="statusText">Connecting...</span>
+        <!-- hero section -->
+         <button><a href="home.html">Start Message</a></button>
+        <div class="hero">
+            <div class="download-section">
+                <h2>Download for Your Platform</h2>
+                <div class="download-buttons">
+                    <a href="#" class="download-btn windows" onclick="downloadWindows(event)">
+                        <span>🪟</span>
+                        <div>
+                            <div>Windows</div>
+                            <small style="font-size: 0.8em; font-weight: normal;">Windows 10/11</small>
+                        </div>
+                    </a>
+                    <a href="#" class="download-btn mac" onclick="downloadMac(event)">
+                        <span>🍎</span>
+                        <div>
+                            <div>macOS</div>
+                            <small style="font-size: 0.8em; font-weight: normal;">macOS 10.12+</small>
+                        </div>
+                    </a>
+                    <a href="#" class="download-btn linux" onclick="downloadLinux(event)">
+                        <span>🐧</span>
+                        <div>
+                            <div>Linux</div>
+                            <small style="font-size: 0.8em; font-weight: normal;">AppImage</small>
+                        </div>
+                    </a>
+                </div>
+                <p class="version-info">Version 1.0.0 | Last updated: November 2024</p>
+            </div>
+
+            <!-- Placeholder for screenshot -->
+            <!-- <img src="screenshot.png" alt="Mini Chat Screenshot" class="screenshot"> -->
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Optimized for speed and performance with minimal resource usage</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure</h3>
+                    <p>End-to-end encryption keeps your conversations private</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Clean Interface</h3>
+                    <p>Beautiful and intuitive design for the best user experience</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- system-requirement -->
+        <div class="system-requirements">
+            <h2>System Requirements</h2>
+            <div class="req-grid">
+                <div class="req-item">
+                    <h4>Windows</h4>
+                    <ul>
+                        <li>Windows 10 or later</li>
+                        <li>64-bit processor</li>
+                        <li>4GB RAM minimum</li>
+                        <li>200MB free disk space</li>
+                    </ul>
+                </div>
+                <div class="req-item">
+                    <h4>macOS</h4>
+                    <ul>
+                        <li>macOS 10.12 or later</li>
+                        <li>Intel or Apple Silicon</li>
+                        <li>4GB RAM minimum</li>
+                        <li>200MB free disk space</li>
+                    </ul>
+                </div>
+                <div class="req-item">
+                    <h4>Linux</h4>
+                    <ul>
+                        <li>Ubuntu 18.04+ or equivalent</li>
+                        <li>64-bit processor</li>
+                        <li>4GB RAM minimum</li>
+                        <li>200MB free disk space</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <footer>
+            <p>&copy; 2024 Mini Chat. All rights reserved.</p>
+            <p style="margin-top: 10px;">
+                <a href="#" style="color: white; margin: 0 10px;">Privacy Policy</a> | 
+                <a href="#" style="color: white; margin: 0 10px;">Terms of Service</a> | 
+                <a href="#" style="color: white; margin: 0 10px;">Support</a>
+            </p>
+        </footer>
     </div>
-  </div>
 
-  <!-- username-section -->
-  <div class="username-section">
-    <div class="username-input-wrapper">
-      <label for="name">Username:</label>
-      <input id="name" placeholder="Enter your name" maxlength="20"/>
-    </div>
-  </div>
+    <!-- JavaScript --- function -->
+    <script>
+        function downloadWindows(e) {
+            e.preventDefault();
+            const downloadUrl = 'https://github.com/sannyuntwin/mini-chat-app/releases/download/v1.0.0/Mini.Chat.Setup.1.0.0.exe';
+            // https://github.com/sannyuntwin/mini-chat-app.git
+            window.location.href = downloadUrl;
+            
+            // Track download (optional)
+            console.log('Windows download started');
+        }
 
-  <!-- chatbox -->
-  <div id="chat">
-    <div class="empty-state">
-      <div class="empty-state-icon">💬</div>
-      <div class="empty-state-text">No messages yet. Start the conversation!</div>
-    </div>
-  </div>
+        function downloadMac(e) {
+            e.preventDefault();
+            // Replace with your actual download URL
+            const downloadUrl = 'https://yourserver.com/downloads/Mini-Chat-1.0.0.dmg';
+            window.location.href = downloadUrl;
+            
+            console.log('macOS download started');
+        }
 
-  <!-- message input box -->
-  <div class="input-section">
-    <div id="input">
-      <input id="msg" placeholder="Type your message..." maxlength="500"/>
-      <button id="send" disabled>Send</button>
-    </div>
-  </div>
+        function downloadLinux(e) {
+            e.preventDefault();
+            // Replace with your actual download URL
+            const downloadUrl = 'https://yourserver.com/downloads/Mini-Chat-1.0.0.AppImage';
+            window.location.href = downloadUrl;
+            
+            console.log('Linux download started');
+        }
 
-</div>
-
-<!-- script - function -->
-<script>
-const chatEl = document.getElementById('chat')
-const nameEl = document.getElementById('name')
-const msgEl = document.getElementById('msg')
-const sendBtn = document.getElementById('send')
-const statusDot = document.getElementById('statusDot')
-const statusText = document.getElementById('statusText')
-const WS_HOST = "ws://localhost:8000/ws"
-let ws = null
-let isFirstMessage = true
-
-function connect() {
-  ws = new WebSocket(WS_HOST)
-  
-  ws.onopen = () => {
-    statusDot.classList.remove('disconnected')
-    statusText.textContent = 'Connected'
-    sendBtn.disabled = false
-    addSystem("Connected to chat server")
-  }
-  
-  ws.onmessage = e => {
-    if (isFirstMessage) {
-      chatEl.innerHTML = ''
-      isFirstMessage = false
-    }
-    addMessage(e.data)
-  }
-  
-  ws.onclose = () => {
-    statusDot.classList.add('disconnected')
-    statusText.textContent = 'Disconnected'
-    sendBtn.disabled = true
-    addSystem("Disconnected from server. Attempting to reconnect...")
-    setTimeout(connect, 3000)
-  }
-  
-  ws.onerror = () => {
-    addSystem("Connection error. Retrying...")
-  }
-}
-
-connect()
-
-sendBtn.onclick = send
-msgEl.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault()
-    send()
-  }
-})
-
-function send() {
-  const name = nameEl.value.trim() || 'Anonymous'
-  const msg = msgEl.value.trim()
-  
-  if (!msg || ws.readyState !== WebSocket.OPEN) return
-  
-  ws.send(`${name}|${msg}`)
-  msgEl.value = ''
-  msgEl.focus()
-}
-
-function addMessage(txt) {
-  if (isFirstMessage) {
-    chatEl.innerHTML = ''
-    isFirstMessage = false
-  }
-  
-  const parts = txt.split('|')
-  if (parts.length >= 2) {
-    const username = parts[0]
-    const message = parts.slice(1).join('|')
-    
-    const messageDiv = document.createElement('div')
-    messageDiv.className = 'message'
-    
-    const usernameDiv = document.createElement('div')
-    usernameDiv.className = 'message-username'
-    usernameDiv.textContent = username
-    
-    const textDiv = document.createElement('div')
-    textDiv.className = 'message-text'
-    textDiv.textContent = message
-    
-    messageDiv.appendChild(usernameDiv)
-    messageDiv.appendChild(textDiv)
-    chatEl.appendChild(messageDiv)
-  } else {
-    const messageDiv = document.createElement('div')
-    messageDiv.className = 'message'
-    const textDiv = document.createElement('div')
-    textDiv.className = 'message-text'
-    textDiv.textContent = txt
-    messageDiv.appendChild(textDiv)
-    chatEl.appendChild(messageDiv)
-  }
-  
-  chatEl.scrollTop = chatEl.scrollHeight
-}
-
-function addSystem(txt) {
-  if (isFirstMessage) {
-    chatEl.innerHTML = ''
-    isFirstMessage = false
-  }
-  
-  const p = document.createElement('div')
-  p.className = 'system-message'
-  p.textContent = txt
-  chatEl.appendChild(p)
-  chatEl.scrollTop = chatEl.scrollHeight
-}
-
-// Save username to localStorage
-nameEl.addEventListener('input', () => {
-  localStorage.setItem('chatUsername', nameEl.value)
-})
-
-// Load saved username
-const savedUsername = localStorage.getItem('chatUsername')
-if (savedUsername) {
-  nameEl.value = savedUsername
-}
-</script>
-
+        // Auto-detect platform and highlight the appropriate button
+        window.addEventListener('DOMContentLoaded', function() {
+            const platform = navigator.platform.toLowerCase();
+            if (platform.includes('win')) {
+                document.querySelector('.download-btn.windows').style.border = '3px solid #fff';
+            } else if (platform.includes('mac')) {
+                document.querySelector('.download-btn.mac').style.border = '3px solid #fff';
+            } else if (platform.includes('linux')) {
+                document.querySelector('.download-btn.linux').style.border = '3px solid #fff';
+            }
+        });
+    </script>
 </body>
 </html>
